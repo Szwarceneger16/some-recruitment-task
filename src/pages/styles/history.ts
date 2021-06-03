@@ -36,6 +36,9 @@ const useStyles = makeStyles({
     width: "100%",
     height: "100%",
   },
+  table: {
+    minWidth: 650,
+  },
 });
 
 type HistoryStyles = ReturnType<typeof useStyles>;
