@@ -20,7 +20,7 @@ export function CurrencyValueField({
   disabled?: boolean;
   adormentFieldName: keyof IFormInput;
 }): ReactElement {
-  const firstName = useWatch({
+  const watcher = useWatch({
     control,
     name: adormentFieldName,
   });
@@ -29,14 +29,15 @@ export function CurrencyValueField({
     <Controller
       name={name}
       control={control}
+      rules={{ required: !disabled }}
       render={({ field, fieldState }) => {
         return (
           <TextField
             placeholder={placeholder}
             className={classes.textField}
             fullWidth
-            disabled={disabled}
             InputProps={{
+              readOnly: disabled,
               endAdornment: (
                 <InputAdornment position="end">
                   {control.fieldsRef.current[adormentFieldName]?._f.value ?? ""}
@@ -45,7 +46,7 @@ export function CurrencyValueField({
             }}
             {...field}
             {...fieldState.isTouched}
-            helperText={!disabled && (fieldState.error?.message ?? " ")}
+            helperText={fieldState.error?.message ?? " "}
           />
         );
       }}
@@ -78,6 +79,7 @@ export function CurrencyTypeField({
             id={name}
             fullWidth={false}
             autoComplete={true}
+            autoSelect={true}
             options={optonsData}
             className={classes.textField}
             value={data[field.value] ?? null}
@@ -92,6 +94,7 @@ export function CurrencyTypeField({
             renderInput={(params) => (
               <TextField
                 {...params}
+                size="medium"
                 label={placeholder}
                 variant="outlined"
                 helperText={fieldState.error?.message ?? " "}

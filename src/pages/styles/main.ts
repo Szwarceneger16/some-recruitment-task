@@ -1,6 +1,7 @@
-import { makeStyles } from "@material-ui/core";
+import { colors, makeStyles } from "@material-ui/core";
+import { green } from "@material-ui/core/colors";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "rgb(255, 255, 255)",
     border: "1px solid grey",
@@ -40,7 +41,25 @@ const useStyles = makeStyles({
       justifyContent: "space-around",
     },
   },
-});
+  buttonWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    width: "min-content",
+    alignSelf: "center",
+  },
+  buttonWrapperButton: {
+    width: "300px",
+    color: "red",
+  },
+  buttonWrapperProgress: {
+    color: green[500],
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
 
 type MainStyles = ReturnType<typeof useStyles>;
 

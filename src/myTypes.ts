@@ -5,10 +5,8 @@ export interface myUrlParams {
   outCurrency: string;
 }
 
-export interface HistoryData {
+export interface HistoryData extends IFormInput {
   dateOfConversion: Date;
-  valueBeforeConversion: number;
-  valueAfterConversion: number;
 }
 
 export interface IFormInput {

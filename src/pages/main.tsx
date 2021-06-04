@@ -1,12 +1,13 @@
 import {
   Button,
+  CircularProgress,
   InputAdornment,
   TextField,
   Typography,
 } from "@material-ui/core";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 import { Control, Controller, useForm } from "react-hook-form";
-import { Route, useParams, useRouteMatch } from "react-router-dom";
+import { Route, useHistory, useParams, useRouteMatch } from "react-router-dom";
 import {
   CurrencyType,
   CurrencyTypes,
@@ -21,8 +22,16 @@ import {
   CurrencyValueField,
 } from "src/components/formFields";
 import SwapHorizIcon from "@material-ui/icons/SwapHoriz";
+import {
+  HistoryDataManager,
+  ToggleHistoryPageState,
+} from "src/components/customHooks";
 
-function MainPage(): ReactElement {
+function MainPage({
+  historyStateManager,
+}: {
+  historyStateManager: HistoryDataManager;
+}): ReactElement {
   const params = useParams() as myUrlParams;
   // console.log(params);
   const classes: MainStyles = useStyles();
@@ -33,16 +42,25 @@ function MainPage(): ReactElement {
       <Typography variant="h6" className={classes.label}>
         Konwerter walut
       </Typography>
-      <FormLayout classes={classes} />
+      <FormLayout historyStateManager={historyStateManager} classes={classes} />
     </div>
   );
 }
 
-function FormLayout({ classes }: { classes: MainStyles }): ReactElement {
+function FormLayout({
+  historyStateManager,
+  classes,
+}: {
+  historyStateManager: HistoryDataManager;
+  classes: MainStyles;
+}): ReactElement {
+  const { toggleHistoryPage } = ToggleHistoryPageState();
+
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    setValue,
   } = useForm<IFormInput>({
     defaultValues: {
       inCurrencyValue: "",
@@ -55,10 +73,31 @@ function FormLayout({ classes }: { classes: MainStyles }): ReactElement {
   });
   const currencyTypes = GetCurrencyTypes();
 
-  console.log(control.fieldsRef.current["inCurrencyType"]?._f.value);
   useEffect(() => {}, [control.fieldsRef.current["inCurrencyType"]?._f.value]);
 
-  const onSubmit = (data: IFormInput) => console.log("submit", data);
+  const onSubmit = (data: IFormInput) => {
+    if (data.inCurrencyValue === "") return false;
+    return GetExchangeRate(data.inCurrencyType, data.outCurrencyType).then(
+      (rate) => {
+        const outCurrencyValue = (data.inCurrencyValue as number) * rate;
+        setValue("outCurrencyValue", outCurrencyValue, { shouldDirty: true });
+
+        historyStateManager.push({ ...data, outCurrencyValue });
+
+        toggleHistoryPage();
+      }
+    );
+  };
+
+  const swapCurrencyTypes = () => {
+    const CurrencyTypeIn =
+      control.fieldsRef.current["inCurrencyType"]?._f.value;
+    const CurrencyTypeOut =
+      control.fieldsRef.current["outCurrencyType"]?._f.value;
+
+    setValue("inCurrencyType", CurrencyTypeOut, { shouldDirty: true });
+    setValue("outCurrencyType", CurrencyTypeIn, { shouldDirty: true });
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -88,7 +127,9 @@ function FormLayout({ classes }: { classes: MainStyles }): ReactElement {
             placeholder="z"
             name="inCurrencyType"
           />
-          <SwapHorizIcon />
+          <div onClick={swapCurrencyTypes}>
+            <SwapHorizIcon />
+          </div>
           <CurrencyTypeField
             classes={classes}
             control={control}
@@ -98,13 +139,43 @@ function FormLayout({ classes }: { classes: MainStyles }): ReactElement {
           />
         </div>
 
-        <Button variant="outlined"> Konwertuj</Button>
+        <div className={classes.buttonWrapper}>
+          <Button
+            type="submit"
+            variant="contained"
+            className={classes.buttonWrapperButton}
+          >
+            Konwertuj
+          </Button>
+          {isSubmitting && (
+            <CircularProgress
+              size={24}
+              className={classes.buttonWrapperProgress}
+            />
+          )}
+        </div>
       </div>
     </form>
   );
 }
 
 const _API_KEY = "315d28fc0699e3be74db";
+
+function GetExchangeRate(inCurrencyType: string, outCurrencyType: string) {
+  return fetch(
+    "https://free.currconv.com/api/v7/convert?apiKey=" +
+      _API_KEY +
+      "&q=" +
+      inCurrencyType +
+      "_" +
+      outCurrencyType +
+      "&compact=y"
+  )
+    .then((res) => res.json())
+    .then((res) => res[inCurrencyType + "_" + outCurrencyType].val)
+    .catch(() => {});
+}
+
 function GetCurrencyTypes() {
   const [currencyTypes, setCurrencyTypes] = useState<CurrencyTypes>({});
 

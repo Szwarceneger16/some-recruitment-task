@@ -37,7 +37,7 @@ const useStyles = makeStyles({
     height: "100%",
   },
   table: {
-    minWidth: 650,
+    // minWidth: 650,
   },
 });
 

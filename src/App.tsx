@@ -1,19 +1,25 @@
 import React, { ReactChild, ReactChildren, ReactElement } from "react";
 import { MainPage, HistoryPage } from "src/pages";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  HistoryDataManager,
+  UseHistoryDataManager,
+} from "./components/customHooks";
 
 function App(): React.ReactElement {
+  const historyStateManager: HistoryDataManager = UseHistoryDataManager();
+
   return (
     <>
       <Switch>
         <Route path="/history/:inCurrency?/:outCurrency?">
-          <MainPage />
-          <HistoryPage />
+          <MainPage historyStateManager={historyStateManager} />
+          <HistoryPage historyStateManager={historyStateManager} />
         </Route>
         {/*  */}
         <Route path="/:inCurrency?/:outCurrency?">
-          <MainPage />
-          <HistoryPage />
+          <MainPage historyStateManager={historyStateManager} />
+          <HistoryPage historyStateManager={historyStateManager} />
         </Route>
       </Switch>
     </>

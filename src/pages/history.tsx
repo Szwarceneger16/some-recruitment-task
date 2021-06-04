@@ -15,57 +15,34 @@ import { HistoryStyles, HistoryStylesProps, useStyles } from "./styles/history";
 import CloseIcon from "@material-ui/icons/Close";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import { HistoryData, myUrlParams } from "src/myTypes";
+import {
+  HistoryDataManager,
+  ToggleHistoryPageState,
+} from "src/components/customHooks";
 
-export function HistoryPage(): ReactElement {
-  const { params, url }: { params: myUrlParams; url: string } = useRouteMatch();
-  const stylesProps: HistoryStylesProps = { isOpen: url.includes("/history") };
+export function HistoryPage({
+  historyStateManager,
+}: {
+  historyStateManager: HistoryDataManager;
+}): ReactElement {
+  const { isHistoryPageShowed, toggleHistoryPage } = ToggleHistoryPageState();
+  const stylesProps: HistoryStylesProps = { isOpen: isHistoryPageShowed };
   const classes = useStyles(stylesProps) as HistoryStyles;
-  const historyStateManager = LocalStorageHistoryData();
+
+  useEffect(() => {}, [historyStateManager.get()]);
 
   return (
-    <Link
-      to={stylesProps.isOpen ? url.replace("/history", "") : "/history" + url}
-    >
-      <div className={classes.root}>
-        {stylesProps.isOpen && (
-          <HistoryDataTable
-            classes={classes}
-            data={historyStateManager.get()}
-          />
-        )}
-        <HistoryHeading classes={classes} isOpened={stylesProps.isOpen} />
-      </div>
-    </Link>
+    // <Link
+    //   to={stylesProps.isOpen ? url.replace("/history", "") : "/history" + url}
+    // >
+    <div className={classes.root} onClick={() => toggleHistoryPage()}>
+      {stylesProps.isOpen && (
+        <HistoryDataTable classes={classes} data={historyStateManager.get()} />
+      )}
+      <HistoryHeading classes={classes} isOpened={stylesProps.isOpen} />
+    </div>
+    // </Link>
   );
-}
-
-function LocalStorageHistoryData() {
-  const [historyData, setHistoryData] = useState<Array<HistoryData>>([]);
-
-  useEffect(() => {
-    const localData: string | null = localStorage.getItem(
-      "currencyConversionHistoryData"
-    );
-
-    if (localData) {
-      const currencyConversionHistoryData: Array<HistoryData> =
-        JSON!.parse(localData);
-      setHistoryData(currencyConversionHistoryData);
-    }
-  }, [historyData]);
-
-  return {
-    get: (): Array<HistoryData> => {
-      return historyData;
-    },
-    push: (data: HistoryData): void => {
-      const newHistoryData: Array<HistoryData> = [...historyData, data];
-      setHistoryData(newHistoryData);
-    },
-    clear: (): void => {
-      setHistoryData([]);
-    },
-  };
 }
 
 function HistoryDataTable({
@@ -81,10 +58,14 @@ function HistoryDataTable({
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Data Konwersji</TableCell>
-              <TableCell align="right">Przed</TableCell>
-              <TableCell align="right"></TableCell>
-              <TableCell align="right">Po</TableCell>
+              <TableCell style={{ width: "50%" }}>Data Konwersji</TableCell>
+              <TableCell style={{ width: "20%" }} align="center">
+                Przed
+              </TableCell>
+              <TableCell style={{ width: "10%" }} align="center"></TableCell>
+              <TableCell style={{ width: "20%" }} align="center">
+                Po
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -92,20 +73,32 @@ function HistoryDataTable({
               <TableRow
                 key={
                   row.dateOfConversion.toString() +
-                  row.valueBeforeConversion.toString() +
-                  row.valueAfterConversion.toString()
+                  row.inCurrencyValue.toString() +
+                  row.inCurrencyType.toString()
                 }
               >
-                <TableCell component="th" scope="row">
-                  {row.dateOfConversion}
+                <TableCell
+                  style={{ width: "50%" }}
+                  /* component="th" */ scope="row"
+                >
+                  {row.dateOfConversion
+                    .toISOString()
+                    .replace("T", " ")
+                    .replace(/.\d\d\dZ/, "")}
                 </TableCell>
-                <TableCell align="center">
-                  {row.valueBeforeConversion}
+                <TableCell style={{ width: "20%" }} align="center">
+                  {(row.inCurrencyValue as number).toFixed(2) +
+                    " " +
+                    row.inCurrencyType}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell style={{ width: "5%" }} align="center">
                   <ArrowRightAltIcon />
                 </TableCell>
-                <TableCell align="center">{row.valueAfterConversion}</TableCell>
+                <TableCell style={{ width: "20%" }} align="center">
+                  {(row.outCurrencyValue as number).toFixed(2) +
+                    " " +
+                    row.outCurrencyType}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
