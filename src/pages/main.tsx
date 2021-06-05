@@ -4,7 +4,7 @@ import {
   Snackbar,
   Typography,
 } from "@material-ui/core";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { IFormInput, schema } from "src/myTypes";
@@ -75,8 +75,6 @@ function FormLayout({
     mode: "onBlur",
   });
   const currencyTypes = GetCurrencyTypes();
-
-  // useEffect(() => {}, [control.fieldsRef.current["inCurrencyType"]?._f.value]);
 
   const onSubmit = (data: IFormInput) => {
     if (data.inCurrencyValue === "") return false;
