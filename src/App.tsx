@@ -14,32 +14,29 @@ function App(): React.ReactElement {
   return (
     <div className={classes.root}>
       <Switch>
-        <Route path="/history/:inCurrency?/:outCurrency?">
+        <Route path="/history/">
           <MainPage historyStateManager={historyStateManager} />
-          <HistoryPage historyStateManager={historyStateManager} />
+          <HistoryPage
+            isHistoryPageShowed={true}
+            historyStateManager={historyStateManager}
+          />
         </Route>
         {/*  */}
-        <Route path="/:inCurrency?/:outCurrency?">
+        <Route path="/">
           <MainPage historyStateManager={historyStateManager} />
-          <HistoryPage historyStateManager={historyStateManager} />
+          <HistoryPage
+            isHistoryPageShowed={false}
+            historyStateManager={historyStateManager}
+          />
         </Route>
       </Switch>
     </div>
   );
 }
 
-// function SelectCurrencyWrapper({ children }: { children: ReactElement }) {
-//   let { path, url } = useRouteMatch();
-
-//   console.log("path", path);
-//   console.log("url", url);
-//   console.log(`${path === "/" ? "" : url}/:inCurrency?/:outCurrency?`);
-
-//   return (
-//     <Switch>
-//       <Route path={`${url}/:inCurrency?/:outCurrency?`}>{children}</Route>
-//     </Switch>
-//   );
-// }
+{
+  /* <Route path="/:inCurrency?/:outCurrency?">
+<Route path="/history/:inCurrency?/:outCurrency?"> */
+}
 
 export default App;

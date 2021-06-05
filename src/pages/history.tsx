@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { ReactChild, ReactElement, useEffect, useState } from "react";
-import { useParams, useRouteMatch, Link } from "react-router-dom";
+import { useParams, useRouteMatch, Link, useHistory } from "react-router-dom";
 import { HistoryStyles, HistoryStylesProps, useStyles } from "./styles/history";
 import CloseIcon from "@material-ui/icons/Close";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
@@ -23,19 +23,21 @@ import {
 
 export function HistoryPage({
   historyStateManager,
+  isHistoryPageShowed,
 }: {
   historyStateManager: HistoryDataManager;
+  isHistoryPageShowed: boolean;
 }): ReactElement {
-  const { isHistoryPageShowed, toggleHistoryPage } = ToggleHistoryPageState();
   const stylesProps: HistoryStylesProps = { isOpen: isHistoryPageShowed };
   const classes = useStyles(stylesProps) as HistoryStyles;
+  const history = useHistory();
+
+  const toggleHistoryPage = () =>
+    isHistoryPageShowed ? history.push("/") : history.push("/history");
 
   useEffect(() => {}, [historyStateManager.get()]);
 
   return (
-    // <Link
-    //   to={stylesProps.isOpen ? url.replace("/history", "") : "/history" + url}
-    // >
     <div className={classes.root}>
       {stylesProps.isOpen && (
         <HistoryDataTable
@@ -50,7 +52,6 @@ export function HistoryPage({
         toggleHistoryPageCallback={() => toggleHistoryPage()}
       />
     </div>
-    // </Link>
   );
 }
 
@@ -144,3 +145,5 @@ function HistoryHeadings({
     </div>
   );
 }
+
+// const { isHistoryPageShowed, toggleHistoryPage } = ToggleHistoryPageState();

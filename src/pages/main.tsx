@@ -35,12 +35,10 @@ function MainPage({
   historyStateManager: HistoryDataManager;
 }): ReactElement {
   const params = useParams() as myUrlParams;
-  // console.log(params);
   const classes: MainStyles = useStyles();
 
   return (
     <div className={classes.root}>
-      {/* MainPage 1:{params.inCurrency} 2:{params.outCurrency} */}
       <Typography className={classes.label}>Konwerter walut</Typography>
       <FormLayout historyStateManager={historyStateManager} classes={classes} />
     </div>
@@ -54,10 +52,10 @@ function FormLayout({
   historyStateManager: HistoryDataManager;
   classes: MainStyles;
 }): ReactElement {
-  const { toggleHistoryPage } = ToggleHistoryPageState();
   const [open, setOpen] = useState<boolean>(false);
+  const history = useHistory();
 
-  const handleClick = () => {
+  const showErrorAlert = () => {
     setOpen(true);
   };
 
@@ -92,15 +90,13 @@ function FormLayout({
     if (data.inCurrencyValue === "") return false;
     return GetExchangeRate(data.inCurrencyType, data.outCurrencyType)
       .then((rate) => {
-        throw "ss";
         const outCurrencyValue = (data.inCurrencyValue as number) * rate;
         setValue("outCurrencyValue", outCurrencyValue, { shouldDirty: true });
 
         historyStateManager.push({ ...data, outCurrencyValue });
-
-        toggleHistoryPage(true);
+        history.push("/history");
       })
-      .catch((e) => handleClick());
+      .catch((e) => showErrorAlert());
   };
 
   const swapCurrencyTypes = () => {
@@ -206,14 +202,4 @@ function GetCurrencyTypes() {
 
 export { MainPage };
 
-// const currencyTypesArray: Array<CurrencyType> = useMemo(
-//   (): Array<CurrencyType> =>
-//     Object.entries(currencyTypes).map(([key, value]) => value),
-//   [currencyTypes]
-// );
-// const getSelectedCurrencySymbol: Function = (fieldName: string): string =>
-//   (currencyTypes &&
-//     control.fieldsRef.current[fieldName]?._f.value &&
-//     currencyTypes[control.fieldsRef.current[fieldName]?._f.value]
-//       .currencySymbol) ||
-//   "";
+//   const { toggleHistoryPage } = ToggleHistoryPageState();

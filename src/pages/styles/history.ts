@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   labelSmallerWrapper: {
     width: "100%",
     textAlign: "center",
+    textDecoration: "underline",
     color: theme.palette.common.white,
     "&:hover": {
       cursor: "pointer",

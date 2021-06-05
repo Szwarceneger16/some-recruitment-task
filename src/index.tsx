@@ -9,12 +9,14 @@ import ScopedCssBaseline from "@material-ui/core/ScopedCssBaseline";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <App />
-      </Router>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <App />
+        </Router>
+      </ThemeProvider>
+    </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById("root")
 );

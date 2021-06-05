@@ -32,7 +32,6 @@ const currencyValueSchema = yup
 const currencyTypeSchema = yup.string().required("Waluta jest wymagana");
 export const schema = yup.object({
   inCurrencyValue: currencyValueSchema,
-  //   outCurrencyValue: currencyValueSchema,
   inCurrencyType: currencyTypeSchema,
   outCurrencyType: currencyTypeSchema,
 });
