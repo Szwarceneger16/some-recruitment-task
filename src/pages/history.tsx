@@ -5,6 +5,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
   TableRow,
   Typography,
@@ -35,11 +36,19 @@ export function HistoryPage({
     // <Link
     //   to={stylesProps.isOpen ? url.replace("/history", "") : "/history" + url}
     // >
-    <div className={classes.root} onClick={() => toggleHistoryPage()}>
+    <div className={classes.root}>
       {stylesProps.isOpen && (
-        <HistoryDataTable classes={classes} data={historyStateManager.get()} />
+        <HistoryDataTable
+          classes={classes}
+          data={historyStateManager.get()}
+          clearCallback={() => historyStateManager.clear()}
+        />
       )}
-      <HistoryHeading classes={classes} isOpened={stylesProps.isOpen} />
+      <HistoryHeadings
+        classes={classes}
+        isOpened={isHistoryPageShowed}
+        toggleHistoryPageCallback={() => toggleHistoryPage()}
+      />
     </div>
     // </Link>
   );
@@ -48,8 +57,11 @@ export function HistoryPage({
 function HistoryDataTable({
   classes,
   data,
+  clearCallback,
 }: {
   classes: HistoryStyles;
+  clearCallback: VoidFunction;
+
   data: Array<HistoryData>;
 }): ReactElement {
   return (
@@ -104,23 +116,31 @@ function HistoryDataTable({
           </TableBody>
         </Table>
       </TableContainer>
+      <div className={classes.labelSmallerWrapper} onClick={clearCallback}>
+        <Typography className={classes.labelSmaller}>
+          Wyczysc Historie
+        </Typography>
+      </div>
     </div>
   );
 }
 
-function HistoryHeading({
+function HistoryHeadings({
   classes,
   isOpened,
+
+  toggleHistoryPageCallback,
 }: {
   classes: HistoryStyles;
   isOpened: boolean;
+  toggleHistoryPageCallback: VoidFunction;
 }): ReactElement {
   return (
-    <div className={classes.labelWrapper}>
-      {isOpened ? <CloseIcon /> : null}
-      <Typography variant="h6" className={classes.label}>
-        HistoryPage
-      </Typography>
+    <div className={classes.labelContainer}>
+      <div className={classes.labelWrapper} onClick={toggleHistoryPageCallback}>
+        {isOpened ? <CloseIcon /> : null}
+        <Typography className={classes.label}>Historia</Typography>
+      </div>
     </div>
   );
 }

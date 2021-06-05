@@ -77,6 +77,8 @@ export function CurrencyTypeField({
         return (
           <Autocomplete
             id={name}
+            debug
+            disablePortal
             fullWidth={false}
             autoComplete={true}
             autoSelect={true}
@@ -94,7 +96,7 @@ export function CurrencyTypeField({
             renderInput={(params) => (
               <TextField
                 {...params}
-                size="medium"
+                size="small"
                 label={placeholder}
                 variant="outlined"
                 helperText={fieldState.error?.message ?? " "}

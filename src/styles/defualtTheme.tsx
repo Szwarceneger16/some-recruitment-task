@@ -2,6 +2,11 @@ import React from "react";
 import { createMuiTheme } from "@material-ui/core/styles";
 
 export const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#2196f3",
+    },
+  },
   overrides: {
     MuiCssBaseline: {
       "@global": {
@@ -11,18 +16,17 @@ export const theme = createMuiTheme({
         body: {
           margin: 0,
           minHeight: "100vh",
-          background: "linear-gradient(45deg, #344ceb 10%,#ffffff 60%)",
+          background: "linear-gradient(45deg, #2196f3 10%,#ffffff 60%)",
           "& div#root": {
-            display: "flex",
-            flexDirection: "row",
             minHeight: "inherit",
-            justifyContent: "center",
-            alignItems: "center",
           },
         },
         a: {
           textDecoration: "none",
           color: "black",
+        },
+        ".MuiAutocomplete-option": {
+          fontSize: "1rem",
         },
       },
     },

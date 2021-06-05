@@ -62,8 +62,8 @@ export function UseHistoryDataManager() {
       };
 
       const newHistoryData: Array<HistoryData> = [
-        ...historyData,
         newHistoryDataEntity,
+        ...historyData,
       ];
       setHistoryData(newHistoryData);
       localStorage.setItem(
@@ -76,6 +76,7 @@ export function UseHistoryDataManager() {
 
   const clear = useCallback((): void => {
     setHistoryData([]);
+    localStorage.removeItem("currencyConversionHistoryData");
   }, []);
 
   return { get, push, clear };

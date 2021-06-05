@@ -5,12 +5,14 @@ import {
   HistoryDataManager,
   UseHistoryDataManager,
 } from "./components/customHooks";
+import { useStyles } from "./styles/app";
 
 function App(): React.ReactElement {
   const historyStateManager: HistoryDataManager = UseHistoryDataManager();
+  const classes = useStyles();
 
   return (
-    <>
+    <div className={classes.root}>
       <Switch>
         <Route path="/history/:inCurrency?/:outCurrency?">
           <MainPage historyStateManager={historyStateManager} />
@@ -22,7 +24,7 @@ function App(): React.ReactElement {
           <HistoryPage historyStateManager={historyStateManager} />
         </Route>
       </Switch>
-    </>
+    </div>
   );
 }
 

@@ -2,6 +2,7 @@ import {
   Button,
   CircularProgress,
   InputAdornment,
+  Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -26,6 +27,7 @@ import {
   HistoryDataManager,
   ToggleHistoryPageState,
 } from "src/components/customHooks";
+import { Alert } from "@material-ui/lab";
 
 function MainPage({
   historyStateManager,
@@ -39,9 +41,7 @@ function MainPage({
   return (
     <div className={classes.root}>
       {/* MainPage 1:{params.inCurrency} 2:{params.outCurrency} */}
-      <Typography variant="h6" className={classes.label}>
-        Konwerter walut
-      </Typography>
+      <Typography className={classes.label}>Konwerter walut</Typography>
       <FormLayout historyStateManager={historyStateManager} classes={classes} />
     </div>
   );
@@ -55,6 +55,19 @@ function FormLayout({
   classes: MainStyles;
 }): ReactElement {
   const { toggleHistoryPage } = ToggleHistoryPageState();
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const {
     control,
@@ -77,16 +90,17 @@ function FormLayout({
 
   const onSubmit = (data: IFormInput) => {
     if (data.inCurrencyValue === "") return false;
-    return GetExchangeRate(data.inCurrencyType, data.outCurrencyType).then(
-      (rate) => {
+    return GetExchangeRate(data.inCurrencyType, data.outCurrencyType)
+      .then((rate) => {
+        throw "ss";
         const outCurrencyValue = (data.inCurrencyValue as number) * rate;
         setValue("outCurrencyValue", outCurrencyValue, { shouldDirty: true });
 
         historyStateManager.push({ ...data, outCurrencyValue });
 
-        toggleHistoryPage();
-      }
-    );
+        toggleHistoryPage(true);
+      })
+      .catch((e) => handleClick());
   };
 
   const swapCurrencyTypes = () => {
@@ -100,61 +114,62 @@ function FormLayout({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className={classes.form}>
-        <CurrencyValueField
+    <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+      <CurrencyValueField
+        classes={classes}
+        control={control}
+        name="inCurrencyValue"
+        adormentFieldName="inCurrencyType"
+        placeholder="Wpisz kwote"
+      />
+      <CurrencyValueField
+        classes={classes}
+        control={control}
+        name="outCurrencyValue"
+        disabled
+        adormentFieldName="outCurrencyType"
+        placeholder="Konwertuj do"
+      />
+      <div className={"currencyTypeSelectors"}>
+        <CurrencyTypeField
           classes={classes}
           control={control}
-          name="inCurrencyValue"
-          adormentFieldName="inCurrencyType"
-          placeholder="Wpisz kwote"
+          data={currencyTypes}
+          placeholder="z"
+          name="inCurrencyType"
         />
-
-        <CurrencyValueField
+        <div onClick={swapCurrencyTypes}>
+          <SwapHorizIcon />
+        </div>
+        <CurrencyTypeField
           classes={classes}
           control={control}
-          name="outCurrencyValue"
-          disabled
-          adormentFieldName="outCurrencyType"
-          placeholder="Konwertuj do"
+          data={currencyTypes}
+          placeholder="do"
+          name="outCurrencyType"
         />
-
-        <div className={"currencyTypeSelectors"}>
-          <CurrencyTypeField
-            classes={classes}
-            control={control}
-            data={currencyTypes}
-            placeholder="z"
-            name="inCurrencyType"
-          />
-          <div onClick={swapCurrencyTypes}>
-            <SwapHorizIcon />
-          </div>
-          <CurrencyTypeField
-            classes={classes}
-            control={control}
-            data={currencyTypes}
-            placeholder="do"
-            name="outCurrencyType"
-          />
-        </div>
-
-        <div className={classes.buttonWrapper}>
-          <Button
-            type="submit"
-            variant="contained"
-            className={classes.buttonWrapperButton}
-          >
-            Konwertuj
-          </Button>
-          {isSubmitting && (
-            <CircularProgress
-              size={24}
-              className={classes.buttonWrapperProgress}
-            />
-          )}
-        </div>
       </div>
+      <div className={classes.buttonWrapper}>
+        <Button
+          type="submit"
+          variant="contained"
+          className={classes.buttonWrapperButton}
+        >
+          Konwertuj
+        </Button>
+        {isSubmitting && (
+          <CircularProgress
+            size={24}
+            className={classes.buttonWrapperProgress}
+          />
+        )}
+      </div>
+
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          Nie udało wykonać się żadanej operacji
+        </Alert>
+      </Snackbar>
     </form>
   );
 }
