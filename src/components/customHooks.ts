@@ -1,7 +1,6 @@
-import { ContactsOutlined } from "@material-ui/icons";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
-import { HistoryData, IFormInput, myUrlParams } from "src/myTypes";
+import { HistoryData, IFormInput } from "src/myTypes";
 
 export function ToggleHistoryPageState() {
   const { url }: { url: string } = useRouteMatch();
@@ -42,12 +41,6 @@ export function UseHistoryDataManager() {
       );
       setHistoryData(currencyConversionHistoryData);
     }
-
-    // window.addEventListener("beforeunload", () => {
-    //   debugger;
-    //   const actualHistoryData = get();
-
-    // });
   }, []);
 
   const get = useCallback((): Array<HistoryData> => {

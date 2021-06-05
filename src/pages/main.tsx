@@ -1,21 +1,13 @@
 import {
   Button,
   CircularProgress,
-  InputAdornment,
   Snackbar,
-  TextField,
   Typography,
 } from "@material-ui/core";
-import { ReactElement, useEffect, useMemo, useState } from "react";
-import { Control, Controller, useForm } from "react-hook-form";
-import { Route, useHistory, useParams, useRouteMatch } from "react-router-dom";
-import {
-  CurrencyType,
-  CurrencyTypes,
-  IFormInput,
-  myUrlParams,
-  schema,
-} from "src/myTypes";
+import { ReactElement, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import { IFormInput, schema } from "src/myTypes";
 import { MainStyles, useStyles } from "./styles/main";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -23,18 +15,18 @@ import {
   CurrencyValueField,
 } from "src/components/formFields";
 import SwapHorizIcon from "@material-ui/icons/SwapHoriz";
-import {
-  HistoryDataManager,
-  ToggleHistoryPageState,
-} from "src/components/customHooks";
+import { HistoryDataManager } from "src/components/customHooks";
 import { Alert } from "@material-ui/lab";
+import {
+  GetCurrencyTypes,
+  GetExchangeRate,
+} from "src/components/currconvService";
 
 function MainPage({
   historyStateManager,
 }: {
   historyStateManager: HistoryDataManager;
 }): ReactElement {
-  const params = useParams() as myUrlParams;
   const classes: MainStyles = useStyles();
 
   return (
@@ -70,7 +62,7 @@ function FormLayout({
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
     setValue,
   } = useForm<IFormInput>({
     defaultValues: {
@@ -84,7 +76,7 @@ function FormLayout({
   });
   const currencyTypes = GetCurrencyTypes();
 
-  useEffect(() => {}, [control.fieldsRef.current["inCurrencyType"]?._f.value]);
+  // useEffect(() => {}, [control.fieldsRef.current["inCurrencyType"]?._f.value]);
 
   const onSubmit = (data: IFormInput) => {
     if (data.inCurrencyValue === "") return false;
@@ -124,7 +116,7 @@ function FormLayout({
         name="outCurrencyValue"
         disabled
         adormentFieldName="outCurrencyType"
-        placeholder="Konwertuj do"
+        placeholder="Wynik"
       />
       <div className={"currencyTypeSelectors"}>
         <CurrencyTypeField
@@ -168,36 +160,6 @@ function FormLayout({
       </Snackbar>
     </form>
   );
-}
-
-const _API_KEY = "315d28fc0699e3be74db";
-
-function GetExchangeRate(inCurrencyType: string, outCurrencyType: string) {
-  return fetch(
-    "https://free.currconv.com/api/v7/convert?apiKey=" +
-      _API_KEY +
-      "&q=" +
-      inCurrencyType +
-      "_" +
-      outCurrencyType +
-      "&compact=y"
-  )
-    .then((res) => res.json())
-    .then((res) => res[inCurrencyType + "_" + outCurrencyType].val)
-    .catch(() => {});
-}
-
-function GetCurrencyTypes() {
-  const [currencyTypes, setCurrencyTypes] = useState<CurrencyTypes>({});
-
-  useEffect(() => {
-    fetch("https://free.currconv.com/api/v7/currencies?apiKey=" + _API_KEY)
-      .then((res) => res.json())
-      .then((res) => setCurrencyTypes(res.results))
-      .catch(() => setCurrencyTypes({}));
-  }, []);
-
-  return currencyTypes;
 }
 
 export { MainPage };

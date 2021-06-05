@@ -1,4 +1,4 @@
-import React, { ReactPropTypes } from "react";
+import React from "react";
 
 interface ErrorBoundaryInterface {
   hasError: Boolean;

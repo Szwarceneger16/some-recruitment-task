@@ -1,25 +1,20 @@
 import {
-  Button,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { ReactChild, ReactElement, useEffect, useState } from "react";
-import { useParams, useRouteMatch, Link, useHistory } from "react-router-dom";
+import { ReactElement, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { HistoryStyles, HistoryStylesProps, useStyles } from "./styles/history";
 import CloseIcon from "@material-ui/icons/Close";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
-import { HistoryData, myUrlParams } from "src/myTypes";
-import {
-  HistoryDataManager,
-  ToggleHistoryPageState,
-} from "src/components/customHooks";
+import { HistoryData } from "src/myTypes";
+import { HistoryDataManager } from "src/components/customHooks";
 
 export function HistoryPage({
   historyStateManager,
@@ -35,14 +30,16 @@ export function HistoryPage({
   const toggleHistoryPage = () =>
     isHistoryPageShowed ? history.push("/") : history.push("/history");
 
-  useEffect(() => {}, [historyStateManager.get()]);
+  const transferHistoryData = historyStateManager.get();
+
+  useEffect(() => {}, [transferHistoryData]);
 
   return (
     <div className={classes.root}>
       {stylesProps.isOpen && (
         <HistoryDataTable
           classes={classes}
-          data={historyStateManager.get()}
+          data={transferHistoryData}
           clearCallback={() => historyStateManager.clear()}
         />
       )}

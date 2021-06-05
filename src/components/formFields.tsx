@@ -20,7 +20,7 @@ export function CurrencyValueField({
   disabled?: boolean;
   adormentFieldName: keyof IFormInput;
 }): ReactElement {
-  const watcher = useWatch({
+  useWatch({
     control,
     name: adormentFieldName,
   });
@@ -77,8 +77,6 @@ export function CurrencyTypeField({
         return (
           <Autocomplete
             id={name}
-            debug
-            disablePortal
             fullWidth={false}
             autoComplete={true}
             autoSelect={true}

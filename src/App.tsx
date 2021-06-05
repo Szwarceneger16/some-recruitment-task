@@ -1,6 +1,6 @@
-import React, { ReactChild, ReactChildren, ReactElement } from "react";
+import React from "react";
 import { MainPage, HistoryPage } from "src/pages";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import {
   HistoryDataManager,
   UseHistoryDataManager,
@@ -14,7 +14,7 @@ function App(): React.ReactElement {
   return (
     <div className={classes.root}>
       <Switch>
-        <Route path="/history/">
+        <Route path="/history">
           <MainPage historyStateManager={historyStateManager} />
           <HistoryPage
             isHistoryPageShowed={true}
@@ -34,9 +34,7 @@ function App(): React.ReactElement {
   );
 }
 
-{
-  /* <Route path="/:inCurrency?/:outCurrency?">
+/* <Route path="/:inCurrency?/:outCurrency?">
 <Route path="/history/:inCurrency?/:outCurrency?"> */
-}
 
 export default App;
