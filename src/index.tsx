@@ -6,6 +6,7 @@ import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import { theme } from "src/styles/defualtTheme";
 import { BrowserRouter as Router } from "react-router-dom";
 import ScopedCssBaseline from "@material-ui/core/ScopedCssBaseline";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 ReactDOM.render(
   <React.StrictMode>
