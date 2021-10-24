@@ -1,8 +1,14 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "src/",
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext", "ES6", "DOM"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "ES6",
+      "DOM"
+    ],
     "allowJs": false,
     "skipLibCheck": false,
     "esModuleInterop": true,
@@ -21,5 +27,7 @@
     "strictNullChecks": true,
     "noLib": false
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

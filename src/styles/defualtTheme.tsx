@@ -1,33 +1,44 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from '@mui/material/styles';
 
-export const theme = createMuiTheme({
+export const theme = createTheme({
   palette: {
     primary: {
-      main: "#2196f3",
+      main: '#1C5CC5',
+      contrastText: '#FFFFFF',
+      dark: '#454860',
+      light: '#3578EB'
     },
+    secondary: {
+      main: '#FFFFFF',
+      contrastText: '#1C5CC5',
+      dark: '#C2CBD9',
+      light: '#3578EB'
+    }
   },
-  overrides: {
+  typography: {
+    fontFamily: 'Lora, serif',
+    fontWeightMedium: 'bold',
+    fontWeightRegular: 'bold'
+  },
+  components: {
     MuiCssBaseline: {
-      "@global": {
-        html: {
-          WebkitFontSmoothing: "auto",
-        },
+      styleOverrides: {
         body: {
           margin: 0,
-          minHeight: "100vh",
-          background: "linear-gradient(45deg, #2196f3 10%,#ffffff 60%)",
-          "& div#root": {
-            minHeight: "inherit",
-          },
+          minHeight: '100vh',
+          background: 'linear-gradient(60deg, #1C5CC5 46%,#ffffff 54%)',
+          '& div#root': {
+            minHeight: 'inherit'
+          }
         },
         a: {
-          textDecoration: "none",
-          color: "black",
+          textDecoration: 'none',
+          color: 'black'
         },
-        ".MuiAutocomplete-option": {
-          fontSize: "1rem",
-        },
-      },
-    },
-  },
+        '.MuiAutocomplete-option': {
+          fontSize: '1rem'
+        }
+      }
+    }
+  }
 });

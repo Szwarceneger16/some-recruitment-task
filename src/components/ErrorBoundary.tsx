@@ -1,25 +1,23 @@
-import React from "react";
+import { Component, ReactNode } from 'react';
+import { ErrorPage } from 'pages/error';
 
 interface ErrorBoundaryInterface {
-  hasError: Boolean;
+  hasError: boolean;
 }
 
-export class ErrorBoundary extends React.Component<
-  any,
-  ErrorBoundaryInterface
-> {
-  constructor(props: any) {
+export class ErrorBoundary extends Component<unknown, ErrorBoundaryInterface> {
+  constructor(props: unknown) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError() {
+  static getDerivedStateFromError(): ErrorBoundaryInterface {
     return { hasError: true };
   }
 
-  render() {
+  render(): ReactNode {
     if (this.state.hasError) {
-      return <h2>Coś psozło nie tak</h2>;
+      return <ErrorPage />;
     }
     return this.props.children;
   }

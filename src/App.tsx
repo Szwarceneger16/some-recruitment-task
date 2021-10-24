@@ -1,40 +1,52 @@
-import React from "react";
-import { MainPage, HistoryPage } from "src/pages";
-import { Switch, Route } from "react-router-dom";
-import {
-  HistoryDataManager,
-  UseHistoryDataManager,
-} from "./components/customHooks";
-import { useStyles } from "./styles/app";
+import { ReactElement, useRef } from 'react';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { CircularProgress, CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { CurrencyCalcualtor } from 'pages/CurrencyCalcualtor';
+import { CalculatorHistory } from 'pages/CalculatorHistory';
+import { HistoryDataProvider } from 'components/historyData/historyDataProvider';
+import { RootElementStyle } from 'styles/app';
+import { theme } from 'styles/defualtTheme';
 
-function App(): React.ReactElement {
-  const historyStateManager: HistoryDataManager = UseHistoryDataManager();
-  const classes = useStyles();
+function App(): ReactElement {
+  const queryClientRef = useRef<QueryClient>();
+  if (!queryClientRef.current) {
+    queryClientRef.current = new QueryClient({
+      defaultOptions: {
+        queries: {
+          refetchOnWindowFocus: false,
+          refetchOnMount: false,
+          retry: 2,
+          staleTime: 2 * 60 * 1000
+        }
+      }
+    });
+  }
 
   return (
-    <div className={classes.root}>
-      <Switch>
-        <Route path="/history">
-          <MainPage historyStateManager={historyStateManager} />
-          <HistoryPage
-            isHistoryPageShowed={true}
-            historyStateManager={historyStateManager}
-          />
-        </Route>
-        {/*  */}
-        <Route path="/">
-          <MainPage historyStateManager={historyStateManager} />
-          <HistoryPage
-            isHistoryPageShowed={false}
-            historyStateManager={historyStateManager}
-          />
-        </Route>
-      </Switch>
-    </div>
+    <QueryClientProvider client={queryClientRef.current}>
+      <HistoryDataProvider loader={<CircularProgress />}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <RootElementStyle>
+            <BrowserRouter>
+              <Switch>
+                <Route path="/history">
+                  <CurrencyCalcualtor />
+                  <CalculatorHistory isOpen={true} />
+                </Route>
+                <Route path="/">
+                  <CurrencyCalcualtor />
+                  <CalculatorHistory isOpen={false} />
+                </Route>
+              </Switch>
+            </BrowserRouter>
+          </RootElementStyle>
+        </ThemeProvider>
+      </HistoryDataProvider>
+    </QueryClientProvider>
   );
 }
-
-/* <Route path="/:inCurrency?/:outCurrency?">
-<Route path="/history/:inCurrency?/:outCurrency?"> */
 
 export default App;
