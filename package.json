@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": false,
   "homepage": "https://szwarceneger16.github.io/nask-recruitment-task/",
+  "license": {
+    "type": "MIT",
+    "url": "https://www.opensource.org/licenses/mit-license.php"
+  },
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",

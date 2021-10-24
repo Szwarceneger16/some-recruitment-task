@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.js": "/static/js/main.0f0ad352.chunk.js",
-    "main.js.map": "/static/js/main.0f0ad352.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.45a70390.js",
-    "runtime-main.js.map": "/static/js/runtime-main.45a70390.js.map",
-    "static/js/2.440bf580.chunk.js": "/static/js/2.440bf580.chunk.js",
-    "static/js/2.440bf580.chunk.js.map": "/static/js/2.440bf580.chunk.js.map",
-    "index.html": "/index.html",
-    "static/js/2.440bf580.chunk.js.LICENSE.txt": "/static/js/2.440bf580.chunk.js.LICENSE.txt"
+    "main.js": "/nask-recruitment-task/static/js/main.0f0ad352.chunk.js",
+    "main.js.map": "/nask-recruitment-task/static/js/main.0f0ad352.chunk.js.map",
+    "runtime-main.js": "/nask-recruitment-task/static/js/runtime-main.e5349599.js",
+    "runtime-main.js.map": "/nask-recruitment-task/static/js/runtime-main.e5349599.js.map",
+    "static/js/2.440bf580.chunk.js": "/nask-recruitment-task/static/js/2.440bf580.chunk.js",
+    "static/js/2.440bf580.chunk.js.map": "/nask-recruitment-task/static/js/2.440bf580.chunk.js.map",
+    "index.html": "/nask-recruitment-task/index.html",
+    "static/js/2.440bf580.chunk.js.LICENSE.txt": "/nask-recruitment-task/static/js/2.440bf580.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.45a70390.js",
+    "static/js/runtime-main.e5349599.js",
     "static/js/2.440bf580.chunk.js",
     "static/js/main.0f0ad352.chunk.js"
   ]
